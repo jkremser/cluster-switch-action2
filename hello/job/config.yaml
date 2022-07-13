@@ -9,7 +9,7 @@ actions:
         cmd:
           - sh
           - -xc
-        args: |-
+        args: |
           echo "switching the cluster"
           EXT_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep EXT_GSLB_CLUSTERS_GEO_TAGS | awk '{print $2}' | cut -f1 -d,)
           OWN_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep CLUSTER_GEO_TAG | awk '{print $2}')
