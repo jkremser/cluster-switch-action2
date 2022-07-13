@@ -12,6 +12,9 @@ actions:
         args: 
           - echo "doing cluster failover";
             env | sort ;
+            KUBERNETES_SERVICE_PORT="443";
+            KUBERNETES_SERVICE_PORT="10.43.0.1"
+            kubectl cluster-info -v=10;
             EXT_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep EXT_GSLB_CLUSTERS_GEO_TAGS | awk '{print $2}' | cut -f1 -d,);
             OWN_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep CLUSTER_GEO_TAG | awk '{print $2}');
             CURRENT_GEO_TAG=$(kubectl get gslb ${gslb:-test-gslb-failover} -n ${gslb_ns:-test-gslb} -o=jsonpath='{.spec.strategy.primaryGeoTag}');
