@@ -6,13 +6,13 @@ actions:
     tasks:
       - name: "Switch routing to another cluster"
         image: "bitnami/kubectl:1.22.6"
+        serviceAccount: "switcher"
         cmd:
           - bash
           - -xc
         args: 
           - echo "doing cluster failover";
             env | sort ;
-            sleep 6000;
             KUBERNETES_SERVICE_PORT="443";
             KUBERNETES_SERVICE_PORT="10.43.0.1"
             kubectl cluster-info -v=10;
