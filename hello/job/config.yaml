@@ -7,12 +7,12 @@ actions:
       - name: "Switch routing to another cluster"
         image: "bitnami/kubectl:latest"
         cmd:
-          - sh
+          - bash
           - -xc
         args: 
-          - echo "cluster";
+          - echo "doing cluster failover";
             EXT_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep EXT_GSLB_CLUSTERS_GEO_TAGS | awk '{print $2}' | cut -f1 -d,);
             OWN_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep CLUSTER_GEO_TAG | awk '{print $2}');
-            CURRENT_GEO_TAG=$(kubectl get gslb ${gslb} -n ${gslb_ns} -o=jsonpath='{.spec.strategy.primaryGeoTag}');
-            [ $xCURRENT_GEO_TAG = $xOWN_GEO_TAG ] && TO_SWITCH=$EXT_GEO_TAG || TO_SWITCH=$OWN_GEO_TAG;
-            kubectl patch gslb ${gslb} -p "{\"spec\":{\"strategy\":{\"primaryGeoTag\":${TO_SWITCH}}}}";
+            CURRENT_GEO_TAG=$(kubectl get gslb ${gslb:-test-gslb-failover} -n ${gslb_ns:-test-gslb} -o=jsonpath='{.spec.strategy.primaryGeoTag}');
+            [[ x$CURRENT_GEO_TAG = x$OWN_GEO_TAG ]] && TO_SWITCH=$EXT_GEO_TAG || TO_SWITCH=$OWN_GEO_TAG;
+            kubectl patch --type=merge gslb ${gslb:-test-gslb-failover} -n ${gslb_ns:-test-gslb} -p '{\"spec\":{\"strategy\":{\"primaryGeoTag\":\"${TO_SWITCH}\"}}}';
