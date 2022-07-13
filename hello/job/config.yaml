@@ -19,4 +19,4 @@ actions:
             OWN_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep CLUSTER_GEO_TAG | awk '{print $2}');
             CURRENT_GEO_TAG=$(kubectl get gslb ${gslb:-test-gslb-failover} -n ${gslb_ns:-test-gslb} -o=jsonpath='{.spec.strategy.primaryGeoTag}');
             [[ x$CURRENT_GEO_TAG = x$OWN_GEO_TAG ]] && TO_SWITCH=$EXT_GEO_TAG || TO_SWITCH=$OWN_GEO_TAG;
-            kubectl patch --type=merge gslb ${gslb:-test-gslb-failover} -n ${gslb_ns:-test-gslb} -p '{\"spec\":{\"strategy\":{\"primaryGeoTag\":\"${TO_SWITCH}\"}}}';
+            kubectl patch --type=merge gslb ${gslb:-test-gslb-failover} -n ${gslb_ns:-test-gslb} -p "{\"spec\":{\"strategy\":{\"primaryGeoTag\":\"${TO_SWITCH}\"}}}";
