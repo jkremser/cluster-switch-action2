@@ -9,10 +9,10 @@ actions:
         cmd:
           - sh
           - -xc
-        args: |
-          echo "switching the cluster"
-          EXT_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep EXT_GSLB_CLUSTERS_GEO_TAGS | awk '{print $2}' | cut -f1 -d,)
-          OWN_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep CLUSTER_GEO_TAG | awk '{print $2}')
-          CURRENT_GEO_TAG=$(kubectl get gslb ${gslb} -n ${gslb_ns} -o=jsonpath='{.spec.strategy.primaryGeoTag}')
-          [ $xCURRENT_GEO_TAG = $xOWN_GEO_TAG ] && TO_SWITCH=$EXT_GEO_TAG || TO_SWITCH=$OWN_GEO_TAG
-          kubectl patch gslb ${gslb} -p "{\"spec\":{\"strategy\":{\"primaryGeoTag\":${TO_SWITCH}}}}"
+        args: 
+          - echo "cluster";
+            EXT_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep EXT_GSLB_CLUSTERS_GEO_TAGS | awk '{print $2}' | cut -f1 -d,);
+            OWN_GEO_TAG=$(kubectl describe deployments.apps k8gb -n k8gb | grep CLUSTER_GEO_TAG | awk '{print $2}');
+            CURRENT_GEO_TAG=$(kubectl get gslb ${gslb} -n ${gslb_ns} -o=jsonpath='{.spec.strategy.primaryGeoTag}');
+            [ $xCURRENT_GEO_TAG = $xOWN_GEO_TAG ] && TO_SWITCH=$EXT_GEO_TAG || TO_SWITCH=$OWN_GEO_TAG;
+            kubectl patch gslb ${gslb} -p "{\"spec\":{\"strategy\":{\"primaryGeoTag\":${TO_SWITCH}}}}";
